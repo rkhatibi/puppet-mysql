@@ -1,0 +1,14 @@
+# PUPPETHEADER: This file is owned by Puppet.
+# replication settings
+
+[mysqld]
+
+# replication settings
+binlog_format = mixed
+expire_logs_days = <%= scope.lookupvar('mysql::data::expire_logs_days') %>
+log_bin
+max_binlog_size = 100M
+<% if clientcert =~ /^vslice02.stage.aws(.*)/ || clientcert =~ /^dbs\d+\.aws(.*)/ then -%>
+read_only = 1
+<% end -%>
+server_id = <%= ipaddress.split('.').inject(0) {|total,value| (total << 8 ) + value.to_i} %>
